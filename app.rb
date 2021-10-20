@@ -5,8 +5,7 @@ class App
     request = Rack::Request.new(env)
 
     if request.path_info =~ /time/
-      time_formatter = TimeFormatter.new(request.query_string)
-      prepare_time_response(time_formatter)
+      prepare_time_response(request.query_string)
     else
       response(404, "Not found path \"#{request.path_info}\"!")
     end
@@ -14,7 +13,9 @@ class App
 
   private
 
-  def prepare_time_response(time_formatter)
+  def prepare_time_response(query_string)
+    time_formatter = TimeFormatter.new(query_string)
+
     if time_formatter.success?
       response(200, time_formatter.time_string)
     elsif time_formatter.format_params_present?
